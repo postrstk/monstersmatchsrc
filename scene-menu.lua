@@ -1,10 +1,40 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
 
-local coins = {}
+
 local backgroup = display.newGroup()
 local foregroup = display.newGroup()
-coins.value = 0
+
+
+lvl = {
+	field = {
+		[0] = {
+			[0] = {value = 30, border = "", buble = false}, [1] = {value = 0, border = "", buble = false},[2] = {value = 0, border = "", buble = false},[3] = {value = 0, border = "", buble = false},[4] = {value = 20, border = "", buble = false}},
+		[1] = {
+			[0] = {value = 0, border = "", buble = false}, [1] = {value = 40, border = "", buble = false},[2] = {value = 0, border = "", buble = false},[3] = {value = 10, border = "", buble = false},[4] = {value = 0, border = "", buble = false}},
+		[2] = {
+			[0] = {value = 0, border = "", buble = false}, [1] = {value = 30, border = "bottom", buble = false},[2] = {value = 0, border = "bottom", buble = false},[3] = {value = 20, border = "bottom", buble = false},[4] = {value = 0, border = "", buble = false}},
+		[3] = {
+			[0] = {value = 0, border = "", buble = false}, [1] = {value = 0, border = "bottom", buble = false},[2] = {value = 0, border = "bottom", buble = false},[3] = {value = 0, border = "bottom", buble = false},[4] = {value = 0, border = "", buble = false}},
+		[4] = {
+			[0] = {value = 0, border = "", buble = false}, [1] = {value = 10, border = "", buble = false},[2] = {value = 0, border = "", buble = false},[3] = {value = 40, border = "", buble = false},[4] = {value = 0, border = "", buble = false}},
+		[5] = {
+			[0] = {value = 0, border = "", buble = false}, [1] = {value = 20, border = "", buble = false},[2] = {value = 0, border = "", buble = false},[3] = {value = 30, border = "", buble = false},[4] = {value = 0, border = "", buble = false}},
+		[6] = {
+			[0] = {value = 10, border = "", buble = false}, [1] = {value = 0, border = "", buble = false},[2] = {value = 0, border = "", buble = false},[3] = {value = 0, border = "", buble = false},[4] = {value = 40, border = "", buble = false}},
+	},
+	goal = {
+		-- monster's index | buble
+		name = "1",
+		count = 10
+	},
+	condition = {
+		-- timer | steps
+		name = "timer",
+		count = 25
+	}
+}
+
 
 function scene:create( event )
 	local sceneGroup = self.view
@@ -39,20 +69,13 @@ function scene:create( event )
 	
 	local bg = display.newImageRect(backgroup, "assets/backgrounds/2.png", 720, 1280)
 
-	coins.image = display.newImageRect(foregroup, "assets/gui/simple/coin.png", 140, 140)
-	coins.image.x = -250
-	coins.image.y = -550
-
-	coins.text = display.newText(foregroup, ""..coins.value, 0, 0, "assets/fonts/12243.otf", 50)
-	coins.text.x = coins.image.x 
-	coins.text.y = coins.image.y + 100
 
 
 	local button_play = {}
 	button_play.image = display.newImageRect(foregroup, "assets/gui/simple/button.png",400, 166 )
 	button_play.image.text = display.newText(foregroup, "Игра", 0, 0, "assets/fonts/12243.otf", 85)
 	button_play.image.next_frame ="scene-game"
-	button_play.image.params = {effect="slideLeft"}
+	button_play.image.params = {effect="slideLeft", params = lvl}
 	
 	local button_progress = {}
 	button_progress.image = display.newImageRect(foregroup, "assets/gui/simple/button.png",400, 166 )
@@ -88,15 +111,7 @@ function scene:create( event )
 end
 
 function scene:show( event )
-	if (nil ~= event.params and "will" == event.phase) then 
-		coins.value = coins.value + event.params.coins
 
-		display.remove(coins.text)
-
-		coins.text = display.newText(foregroup, ""..coins.value, 0, 0, "assets/fonts/12243.otf", 50)
-		coins.text.x = coins.image.x 
-		coins.text.y = coins.image.y + 100
-	end
 end
 
 function scene:hide( event )

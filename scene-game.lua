@@ -8,6 +8,8 @@ function scene:create( event )
 	display.setStatusBar(display.HiddenStatusBar)
 	math.randomseed(os.time())
 
+	local lvl = event.params
+
 	local backgroup = display.newGroup()
 	local foregroup = display.newGroup()
 
@@ -32,19 +34,17 @@ function scene:create( event )
 		path = {monsters = "assets/monsters/two/"}
 	}
 
-	local goal_counter = 1
+	local goal_name = lvl.goal.name
+	local goal_counter = lvl.goal.count
 
-	local condition_counter = 20
-	local condition_name = "timer"
-	local condition_timer_on = false
+	local condition_counter = lvl.condition.count
+	local condition_name = lvl.condition.name
+	local timer_on = false
 
 	local rows = 7
 	local cols = 5
 
-	local isAnim = false
-
 	local cells = {}
-	local prev_cells = {}
 	local empty_cells = {}
 	local next_monster = 1
 
@@ -60,23 +60,42 @@ function scene:create( event )
 	scoregoup.y = 140
 
 
-	local function changeAnim( )
-		isAnim = not isAnim
-	end
-
 	local function update_scoregrid (index)
 
 	end	
 
+
+
+	local panel = {}
+	panel.back = display.newImageRect(backgroup, "assets/backgrounds/upper-panel-"..condition_name..".png", options.cells_size*options.scale.large * 5, 250)
+	panel.back.anchorX = 0.5
+	panel.back.y = - 500
+	panel.back.x = 0
+
+	panel.condition = display.newText(backgroup, condition_counter, 0, 0,"assets/fonts/12243.otf", 60)
+	panel.condition.y = -490
+	panel.condition.x = -20
+
+
+
 	local function end_level( )
-		print("time over!")
+		local goal
+
+		if(condition_name == "timer") then timer_on = false end
+
+		if(goal_counter > 0) then goal = "fail" else goal = "success" end
+
+		composer.showOverlay("scene-exit", {effect="fade", params = { goal=goal}})
 	end
 
 	local function change_counter_text( )
+		panel.condition.text = condition_counter
 		print(condition_counter)
 	end
 
 	local function dec_condition_counter( )
+		if (condition_name == "timer" and not timer_on) then return end
+		
 		if (condition_counter == 0) then
 			end_level()
 		else
@@ -87,26 +106,9 @@ function scene:create( event )
 	
 
 	if (condition_name == "timer") then
+		timer_on = true
 		timer.performWithDelay( 1000, dec_condition_counter, 0)
-	else
-		foregroup:addEventListener("tap",dec_condition_counter)
 	end
-
-	local panel = {}
-	panel.back = display.newImageRect(backgroup, "assets/backgrounds/upper-panel_1.png", options.cells_size*options.scale.large * 5, 250)
-	panel.back.anchorX = 0.5
-	panel.back.y = - 500
-	panel.back.x = 0
-
---[[	panel.textScore = display.newText(backgroup,  "собрано монстров", 0, 0,"assets/fonts/12243.otf", 29)
-	panel.textScore.y = -500 -100
-	panel.textScore.x = -140
-	
-	panel.textNext = display.newText(backgroup,  "следующий ход", 0, 0,"assets/fonts/12243.otf", 29)
-	panel.textNext.y = -500 -100
-	panel.textNext.x = 190
-]]
-
 	-- state is: create, grow, placed, hold
 	local function display_monster( r, c, state)
 		if ("create" == state) then
@@ -127,16 +129,6 @@ function scene:create( event )
 			cells[r][c].image.x = c*options.cells_size * options.scale.large
 			cells[r][c].image.y = r*options.cells_size * options.scale.large
 
-			if (cells[r][c].isbuble ~= nil) then
-				cells[r][c].buble = display.newImageRect(foregroup,
-					"assets/backgrounds/stop_left.png",
-					options.cells_size * options.scale.large, options.cells_size * options.scale.large)
-		
-				cells[r][c].buble.x = c*options.cells_size * options.scale.large
-		    	cells[r][c].buble.y = r*options.cells_size * options.scale.large 
-
-			end
-
 		elseif ("hold" == state) then
 		end
 	end
@@ -147,11 +139,11 @@ function scene:create( event )
 		if (nextMonsterField.image ~= nil) then
 			display.remove(nextMonsterField.image)
 		end
-		nextMonsterField.image = display.newImageRect(scoregoup, options.path.monsters..next_monster..".png", 160, 160)
+		nextMonsterField.image = display.newImageRect(scoregoup, options.path.monsters..next_monster..".png", 180, 180)
 		nextMonsterField.image.anchorX = 0.5
 		nextMonsterField.image.anchorY = 0.5
-		nextMonsterField.image.x = 380
-		nextMonsterField.image.y = 0
+		nextMonsterField.image.x = 390
+		nextMonsterField.image.y = 15
 	end
 
 	---------------------
@@ -227,23 +219,39 @@ function scene:create( event )
 			cells[r] = {}
 			for c = 0, cols - 1 do
 				cells[r][c] = {}
-				cells[r][c].value = 0
+				cells[r][c].value = lvl.field[r][c].value
+				cells[r][c].buble = lvl.field[r][c].buble
+				cells[r][c].border = lvl.field[r][c].border
+
+
 				cells[r][c].scale = 1
 				cells[r][c].backgrid = display.newImageRect(foregroup, "assets/backgrounds/backgrid.png", 
 					options.cells_size * options.scale.large, options.cells_size * options.scale.large)
 		
 				cells[r][c].backgrid.x = c*options.cells_size * options.scale.large
-		    	cells[r][c].backgrid.y = r*options.cells_size * options.scale.large  
+		    	cells[r][c].backgrid.y = r*options.cells_size * options.scale.large 
+
+
+		    	if (cells[r][c].value ~= 0) then display_monster(r, c, "placed") end
+
+		    	if (cells[r][c].border ~= "") then 
+		    		cells[r][c].border_image = display.newImageRect(foregroup, 
+		    		"assets/backgrounds/stop_"..cells[r][c].border..".png", 
+					options.cells_size * options.scale.large, options.cells_size * options.scale.large)
+		    		
+		    		cells[r][c].border_image.x = c*options.cells_size * options.scale.large
+		    		cells[r][c].border_image.y = r*options.cells_size * options.scale.large 
+		    	end 
 			end
 		end
-		for i = 1, 3 do
+		--[[for i = 1, 3 do
 			add_big_monster()
 		end
 		for i = 1, 2 do
 			add_small_monster()
-		end
+		end]]
 
-		print_cells()
+		--print_cells()
 	end
 
 	--[[
@@ -428,6 +436,9 @@ function scene:create( event )
 			grow()
 
 			match()
+			if (condition_name == "steps") then
+				dec_condition_counter()
+			end
 
 			add_small_monster()
 		end
@@ -450,11 +461,7 @@ function scene:create( event )
 	button_back.y = 600
 	button_back:addEventListener("tap", function () 
 		composer.showOverlay("scene-exit", 
-			{effect="fade", params = { 
-			[1]=scoregrid[0].value,
-			[2]=scoregrid[1].value,
-			[3]=scoregrid[2].value,
-			[4]=scoregrid[3].value}}) end)
+			{effect="fade", params = { goal="fail"}}) end)
 
 
 	
