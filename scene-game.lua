@@ -31,8 +31,14 @@ function scene:create( event )
 		bg_size = {w = 720, h = 1280},
 		cells_size = 13,
 		scale = {small = 5, large = 10},
-		path = {monsters = "assets/monsters/two/"}
+		path = {monsters = "assets/monsters/three/"}
 	}
+
+	local goal = {}
+	for i =0, #lvl.goal do
+		goal[i] = lvl.goal[i]
+	end
+
 
 	local goal_name = lvl.goal.name
 	local goal_counter = lvl.goal.count
@@ -60,12 +66,6 @@ function scene:create( event )
 	scoregoup.y = 140
 
 
-	local function update_scoregrid (index)
-
-	end	
-
-
-
 	local panel = {}
 	panel.back = display.newImageRect(backgroup, "assets/backgrounds/upper-panel-"..condition_name..".png", options.cells_size*options.scale.large * 5, 250)
 	panel.back.anchorX = 0.5
@@ -76,16 +76,65 @@ function scene:create( event )
 	panel.condition.y = -490
 	panel.condition.x = -20
 
+	for i=0, #goal do
+		goal[i].image = display.newImageRect(backgroup, 
+			options.path.monsters..goal[i].name..".png", 80, 80)
+		goal[i].text = display.newText(backgroup, 
+			goal[i].count, 0, 0, "assets/fonts/12243.otf", 30)
+
+		if(#goal ~= 0) then
+			--goal[i].image.x = -260
+			--goal[i].image.y = -440 - 100*i
+
+			--goal[i].text.x = -180
+			--goal[i].text.y = -440 - 100*i
+			goal[i].image.x = -275 + 100*i
+			goal[i].image.y = -500
+
+			goal[i].text.x = -275 + 100*i
+			goal[i].text.y = -440
+		else
+			--goal[i].image.x = -260
+			--goal[i].image.y = -500
+
+			--goal[i].text.x = -180
+			--goal[i].text.y = -500
+			goal[i].image.x = -225
+			goal[i].image.y = -500
+
+			goal[i].text.x = -225
+			goal[i].text.y = -440
+		end
+	end
 
 
 	local function end_level( )
-		local goal
+		print("end level!")
+		local goal_result
+		local sum = 0
+		for i =0, #goal do
+			sum = sum + goal[i].count
+		end
 
 		if(condition_name == "timer") then timer_on = false end
 
-		if(goal_counter > 0) then goal = "fail" else goal = "success" end
+		if(sum > 0) then goal_result = "fail" else goal_result = "success" end
 
-		composer.showOverlay("scene-exit", {effect="fade", params = { goal=goal}})
+		composer.showOverlay("scene-exit", {effect="fade", params = { goal=goal_result}})
+	end
+
+	local function dec_goal_counter( index )
+		for i = 0, #goal do
+			if (goal[i].name == ""..index and goal[i].count > 0) then
+				goal[i].count = goal[i].count - 1
+				if (goal[i].count > 0) then
+					goal[i].text.text = goal[i].count
+				else
+					goal[i].text.text = "OK"
+					end_level()
+				end
+			end
+		end
 	end
 
 	local function change_counter_text( )
@@ -131,11 +180,12 @@ function scene:create( event )
 
 		elseif ("hold" == state) then
 		end
+
 	end
 
 
 	local function update_next_monster()
-		next_monster = math.random(1, 4)
+		next_monster = math.random(1, 1)
 		if (nextMonsterField.image ~= nil) then
 			display.remove(nextMonsterField.image)
 		end
@@ -207,7 +257,7 @@ function scene:create( event )
 		get_empty_cells()
 
 		local index = math.random(0, #empty_cells)
-		cells[empty_cells[index].r][empty_cells[index].c].value = math.random(1,4)
+		cells[empty_cells[index].r][empty_cells[index].c].value = math.random(1,5)
 
 		display_monster(empty_cells[index].r, empty_cells[index].c, "create")
 	end
@@ -230,10 +280,9 @@ function scene:create( event )
 		
 				cells[r][c].backgrid.x = c*options.cells_size * options.scale.large
 		    	cells[r][c].backgrid.y = r*options.cells_size * options.scale.large 
-
-
+		    	
 		    	if (cells[r][c].value ~= 0) then display_monster(r, c, "placed") end
-
+		    	
 		    	if (cells[r][c].border ~= "") then 
 		    		cells[r][c].border_image = display.newImageRect(foregroup, 
 		    		"assets/backgrounds/stop_"..cells[r][c].border..".png", 
@@ -242,24 +291,12 @@ function scene:create( event )
 		    		cells[r][c].border_image.x = c*options.cells_size * options.scale.large
 		    		cells[r][c].border_image.y = r*options.cells_size * options.scale.large 
 		    	end 
+		    	
 			end
 		end
-		--[[for i = 1, 3 do
-			add_big_monster()
-		end
-		for i = 1, 2 do
-			add_small_monster()
-		end]]
-
-		--print_cells()
 	end
 
-	--[[
 
-	 destroy monsters steps
-	 grow -> shift+diminish -> remove
-
-	]]
 	local function remove_monsters( monster )
 		display.remove(monster)
 	end
@@ -271,41 +308,52 @@ function scene:create( event )
 
 	local function destroy_monsters(r, c)
 		transition.scaleTo( cells[r][c].image, { xScale=options.scale.large*1.5, yScale=options.scale.large*1.5, onComplete=shift_monsters } )
-		update_scoregrid(cells[r][c].value/10 - 1)
 	end
 
 	local function to_up( rr, cc )
 		local count = 0
+		if(cells[rr][cc].border == "top") then return 0 end
 		for r = rr - 1, 0, -1 do
-			if (cells[rr][cc].value ~= cells[r][cc].value) then break end
+			if (cells[rr][cc].value ~= cells[r][cc].value or
+				cells[r][cc].border == "bottom") then break end
 			count = count + 1
+			if(cells[r][cc].border == "top") then return count end
 		end
 		return count
 	end
 
 	local function to_down( rr, cc )
 		local count = 0
+		if(cells[rr][cc].border == "bottom") then return 0 end
 		for r = rr + 1, rows - 1 do
-			if (cells[rr][cc].value ~= cells[r][cc].value) then break end
+			if (cells[rr][cc].value ~= cells[r][cc].value or
+				cells[r][cc].border == "top") then break end
 			count = count + 1
+			if(cells[r][cc].border == "bottom") then return count end
 		end
 		return count
 	end
 
 	local function to_left( rr, cc )
 		local count = 0
+		if(cells[rr][cc].border == "left") then return 0 end
 		for c = cc - 1, 0, -1 do
-			if (cells[rr][cc].value ~= cells[rr][c].value) then break end
+			if (cells[rr][cc].value ~= cells[rr][c].value or
+				cells[rr][c].border == "right") then break end
 			count = count + 1
+			if(cells[rr][c].border == "left") then return count end
 		end
 		return count
 	end
 
 	local function to_right( rr, cc )
 		local count = 0
+		if(cells[rr][cc].border == "right") then return 0 end
 		for c = cc + 1, cols - 1 do
-			if (cells[rr][cc].value ~= cells[rr][c].value) then break end
+			if (cells[rr][cc].value ~= cells[rr][c].value or
+				cells[rr][c].border == "left") then break end
 			count = count + 1
+			if(cells[rr][c].border == "right") then return count end
 		end
 		return count
 	end
@@ -395,7 +443,7 @@ function scene:create( event )
 		for r = 0, rows - 1 do
 			for c = 0, cols - 1 do
 				if(exp_cells[r][c].is_matched) then
-					--scoregrid[cells[r][c].value/10 - 1].value = scoregrid[cells[r][c].value/10 - 1].value + 1
+					dec_goal_counter(cells[r][c].value/10)
 					destroy_monsters(r, c)
 					cells[r][c].value = 0
 				end
@@ -438,7 +486,15 @@ function scene:create( event )
 			match()
 			if (condition_name == "steps") then
 				dec_condition_counter()
+				if (condition_counter == 0) then
+					end_level()
+				end
 			end
+			
+			get_empty_cells()
+			if (#empty_cells < 2) then 
+				end_level()
+			end 
 
 			add_small_monster()
 		end

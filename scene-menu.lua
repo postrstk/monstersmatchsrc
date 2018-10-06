@@ -15,7 +15,7 @@ lvl = {
 		[2] = {
 			[0] = {value = 0, border = "", buble = false}, [1] = {value = 30, border = "bottom", buble = false},[2] = {value = 0, border = "bottom", buble = false},[3] = {value = 20, border = "bottom", buble = false},[4] = {value = 0, border = "", buble = false}},
 		[3] = {
-			[0] = {value = 0, border = "", buble = false}, [1] = {value = 0, border = "bottom", buble = false},[2] = {value = 0, border = "bottom", buble = false},[3] = {value = 0, border = "bottom", buble = false},[4] = {value = 0, border = "", buble = false}},
+			[0] = {value = 0, border = "", buble = false}, [1] = {value = 0, border = "bottom", buble = false},[2] = {value = 50, border = "bottom", buble = false},[3] = {value = 0, border = "bottom", buble = false},[4] = {value = 0, border = "", buble = false}},
 		[4] = {
 			[0] = {value = 0, border = "", buble = false}, [1] = {value = 10, border = "", buble = false},[2] = {value = 0, border = "", buble = false},[3] = {value = 40, border = "", buble = false},[4] = {value = 0, border = "", buble = false}},
 		[5] = {
@@ -23,23 +23,22 @@ lvl = {
 		[6] = {
 			[0] = {value = 10, border = "", buble = false}, [1] = {value = 0, border = "", buble = false},[2] = {value = 0, border = "", buble = false},[3] = {value = 0, border = "", buble = false},[4] = {value = 40, border = "", buble = false}},
 	},
-	goal = {
+	goal = {[0]={
 		-- monster's index | buble
 		name = "1",
-		count = 10
+		count = 10}
+		--, [1]={ name = "3", count = 15}
 	},
 	condition = {
 		-- timer | steps
 		name = "timer",
-		count = 25
+		count = 10
 	}
 }
 
 
 function scene:create( event )
 	local sceneGroup = self.view
-
-
 
 	local function next_frame( btn )
 		return composer.gotoScene(btn.next_frame, btn.params)
@@ -111,7 +110,7 @@ function scene:create( event )
 end
 
 function scene:show( event )
-
+	print(lvl.goal[0].count)
 end
 
 function scene:hide( event )

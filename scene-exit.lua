@@ -14,7 +14,7 @@ function scene:create( event )
 	backgroup:addEventListener("tap", function ( )
 		composer.hideOverlay( "fromBottom",1)
 		composer.removeScene("scene-game")
-		return composer.gotoScene("scene-menu", {effect="slideRight", params={coins=total_score}})
+		return composer.gotoScene("scene-menu", {effect="slideRight"})
 	end)
 	sceneGroup:insert(backgroup)
 end
