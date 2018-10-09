@@ -5,6 +5,12 @@
 
 settings =
 {
+	window = 
+	{
+	    defaultViewWidth = 1080,
+     	defaultViewHeight = 1920,
+		defaultMode = "maximized"
+	},
 	orientation =
 	{
 		-- Supported values for orientation:
@@ -12,16 +18,7 @@ settings =
 		default = "portrait",
 		supported = { "portrait", },
 	},
-	    -- for HTML5/Desktop stuff
-  window =
-    {
-      defaultMode = "maximized",
-      resizable = false,
-      -- minViewWidth = 480,
-      -- minViewHeight = 320,
-      defaultViewWidth = 720,
-      defaultViewHeight = 1280,
-    },
+
 	--
 	-- Android section
 	--
