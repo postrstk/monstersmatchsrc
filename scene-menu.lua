@@ -72,7 +72,7 @@ function scene:create( event )
 
 	local button_play = {}
 	button_play.image = display.newImageRect(foregroup, "assets/gui/simple/button.png",400, 166 )
-	button_play.image.text = display.newText(foregroup, "Игра", 0, 0, "assets/fonts/12243.otf", 85)
+	button_play.image.text = display.newText(foregroup, "Игра", 0, 0, native.systemFont, 85)
 	button_play.image.next_frame ="scene-game"
 	button_play.image.params = {effect="slideLeft", params = lvl}
 	

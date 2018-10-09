@@ -5,4 +5,6 @@
 -----------------------------------------------------------------------------------------
 local composer = require( "composer" )
 
+print(display.contentWidth)
+
 composer.gotoScene("scene-menu")

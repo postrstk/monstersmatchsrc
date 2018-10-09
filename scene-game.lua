@@ -74,7 +74,7 @@ function scene:create( event )
 	panel.back.y = - 500
 	panel.back.x = 0
 
-	panel.condition = display.newText(backgroup, condition_counter, 0, 0,"assets/fonts/12243.otf", 60)
+	panel.condition = display.newText(backgroup, condition_counter, 0, 0, native.systemFont, 120)
 	panel.condition.y = -490
 	panel.condition.x = -20
 
@@ -82,7 +82,7 @@ function scene:create( event )
 		goal[i].image = display.newImageRect(backgroup, 
 			options.path.monsters..goal[i].name..".png", 80, 80)
 		goal[i].text = display.newText(backgroup, 
-			goal[i].count, 0, 0, "assets/fonts/12243.otf", 30)
+			goal[i].count, 0, 0, native.systemFon, 40)
 
 		if(#goal ~= 0) then
 			--goal[i].image.x = -260
@@ -277,7 +277,7 @@ function scene:create( event )
 
 
 				cells[r][c].scale = 1
-				cells[r][c].backgrid = display.newImageRect(foregroup, "assets/backgrounds/backgrid.png", 
+				cells[r][c].backgrid = display.newImageRect(foregroup, "assets/backgrounds/backgrid-"..((r+c)%2)..".png", 
 					options.cells_size * options.scale.large, options.cells_size * options.scale.large)
 		
 				cells[r][c].backgrid.x = c*options.cells_size * options.scale.large
