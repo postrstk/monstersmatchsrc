@@ -36,7 +36,9 @@ function scene:create( event )
 
 	local goal = {}
 	for i =0, #lvl.goal do
-		goal[i] = lvl.goal[i]
+		goal[i] = {}
+		goal[i].name = lvl.goal[i].name
+		goal[i].count = lvl.goal[i].count
 	end
 
 

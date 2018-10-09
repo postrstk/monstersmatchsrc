@@ -31,7 +31,7 @@ lvl = {
 	},
 	condition = {
 		-- timer | steps
-		name = "timer",
+		name = "steps",
 		count = 10
 	}
 }
