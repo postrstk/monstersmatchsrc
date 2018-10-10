@@ -7,32 +7,49 @@ local foregroup = display.newGroup()
 
 
 lvl = {
-	field = {
-		[0] = {
-			[0] = {value = 30, border = "", buble = false}, [1] = {value = 0, border = "", buble = false},[2] = {value = 0, border = "", buble = false},[3] = {value = 0, border = "", buble = false},[4] = {value = 20, border = "", buble = false}},
-		[1] = {
-			[0] = {value = 0, border = "", buble = false}, [1] = {value = 40, border = "", buble = false},[2] = {value = 0, border = "", buble = false},[3] = {value = 10, border = "", buble = false},[4] = {value = 0, border = "", buble = false}},
-		[2] = {
-			[0] = {value = 0, border = "", buble = false}, [1] = {value = 30, border = "bottom", buble = false},[2] = {value = 0, border = "bottom", buble = false},[3] = {value = 20, border = "bottom", buble = false},[4] = {value = 0, border = "", buble = false}},
-		[3] = {
-			[0] = {value = 0, border = "", buble = false}, [1] = {value = 0, border = "bottom", buble = false},[2] = {value = 50, border = "bottom", buble = false},[3] = {value = 0, border = "bottom", buble = false},[4] = {value = 0, border = "", buble = false}},
-		[4] = {
-			[0] = {value = 0, border = "", buble = false}, [1] = {value = 10, border = "", buble = false},[2] = {value = 0, border = "", buble = false},[3] = {value = 40, border = "", buble = false},[4] = {value = 0, border = "", buble = false}},
-		[5] = {
-			[0] = {value = 0, border = "", buble = false}, [1] = {value = 20, border = "", buble = false},[2] = {value = 0, border = "", buble = false},[3] = {value = 30, border = "", buble = false},[4] = {value = 0, border = "", buble = false}},
-		[6] = {
-			[0] = {value = 10, border = "", buble = false}, [1] = {value = 0, border = "", buble = false},[2] = {value = 0, border = "", buble = false},[3] = {value = 0, border = "", buble = false},[4] = {value = 40, border = "", buble = false}},
-	},
+	adventure = 1,
+
 	goal = {[0]={
 		-- monster's index | buble
 		name = "1",
 		count = 10}
 		--, [1]={ name = "3", count = 15}
 	},
+
 	condition = {
 		-- timer | steps
 		name = "steps",
 		count = 10
+	},
+
+	field = {
+		[0] = {[0]=10,[1]=0,[2]=0,[3]=0,[4]=30},
+		[1] = {[0]=20,[1]=0,[2]=0,[3]=40,[4]=0},
+		[2] = {[0]=0,[1]=10,[2]=0,[3]=30,[4]=0},
+		[3] = {[0]=0,[1]=0,[2]=0,[3]=0,[4]=0},
+		[4] = {[0]=0,[1]=10,[2]=0,[3]=0,[4]=30},
+		[5] = {[0]=20,[1]=0,[2]=0,[3]=40,[4]=0},
+		[6] = {[0]=10,[1]=0,[2]=0,[3]=30,[4]=0},
+	},
+
+	special = {
+		[0] = {[0]=0,[1]=1,[2]=0,[3]=1,[4]=0},
+		[1] = {[0]=0,[1]=1,[2]=0,[3]=1,[4]=0},
+		[2] = {[0]=0,[1]=1,[2]=0,[3]=1,[4]=0},
+		[3] = {[0]=0,[1]=1,[2]=1,[3]=1,[4]=0},
+		[4] = {[0]=0,[1]=0,[2]=1,[3]=0,[4]=0},
+		[5] = {[0]=0,[1]=0,[2]=1,[3]=0,[4]=0},
+		[6] = {[0]=0,[1]=0,[2]=1,[3]=0,[4]=0},
+	},
+
+	border = {
+		[0] = {[0]="",[1]="",[2]="",[3]="",[4]=""},
+		[1] = {[0]="",[1]="",[2]="",[3]="",[4]=""},
+		[2] = {[0]="",[1]="bottom",[2]="bottom",[3]="bottom",[4]=""},
+		[3] = {[0]="",[1]="bottom",[2]="bottom",[3]="bottom",[4]=""},
+		[4] = {[0]="",[1]="",[2]="",[3]="",[4]=""},
+		[5] = {[0]="",[1]="",[2]="",[3]="",[4]=""},
+		[6] = {[0]="",[1]="",[2]="",[3]="",[4]=""},
 	}
 }
 

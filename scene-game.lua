@@ -23,7 +23,7 @@ function scene:create( event )
 	foregroup.anchorX = 0.5
 	foregroup.anchorY = 0.5
 	foregroup.x = display.contentCenterX
-	foregroup.y = display.contentCenterY + 100
+	foregroup.y = display.contentCenterY + 150
 
 	-- MONSTERS MATRIX --
 
@@ -271,9 +271,9 @@ function scene:create( event )
 			cells[r] = {}
 			for c = 0, cols - 1 do
 				cells[r][c] = {}
-				cells[r][c].value = lvl.field[r][c].value
-				cells[r][c].buble = lvl.field[r][c].buble
-				cells[r][c].border = lvl.field[r][c].border
+				cells[r][c].value = lvl.field[r][c]
+				cells[r][c].special = lvl.special[r][c]
+				cells[r][c].border = lvl.border[r][c]
 
 
 				cells[r][c].scale = 1
@@ -282,7 +282,15 @@ function scene:create( event )
 		
 				cells[r][c].backgrid.x = c*options.cells_size * options.scale.large
 		    	cells[r][c].backgrid.y = r*options.cells_size * options.scale.large 
-		    	
+
+		    	if (cells[r][c].special ~= 0) then 
+			    	cells[r][c].special = display.newImageRect(foregroup, "assets/backgrounds/special_"..lvl.adventure..".png", 
+						options.cells_size * options.scale.large, options.cells_size * options.scale.large)
+			
+					cells[r][c].special.x = c*options.cells_size * options.scale.large
+			    	cells[r][c].special.y = r*options.cells_size * options.scale.large 
+		    	end
+
 		    	if (cells[r][c].value ~= 0) then display_monster(r, c, "placed") end
 		    	
 		    	if (cells[r][c].border ~= "") then 
