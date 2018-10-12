@@ -23,13 +23,13 @@ function scene:create( event )
 	foregroup.anchorX = 0.5
 	foregroup.anchorY = 0.5
 	foregroup.x = display.contentCenterX
-	foregroup.y = display.contentCenterY + 150
+	foregroup.y = display.contentCenterY + 140
 
 	-- MONSTERS MATRIX --
 
 	local options = {
 		bg_size = {w = 720, h = 1280},
-		cells_size = 13,
+		cells_size = 14,
 		scale = {small = 5, large = 10},
 		path = {monsters = "assets/monsters/three/"}
 	}
@@ -60,7 +60,7 @@ function scene:create( event )
 
 
 	-- init UI
-	local bg = display.newImageRect(backgroup, "assets/backgrounds/2.png", options.bg_size.w, options.bg_size.h)
+	local bg = display.newImageRect(backgroup, "assets/backgrounds/"..lvl.adventure..".png", options.bg_size.w, options.bg_size.h)
 	local scoregoup = display.newGroup()
 	scoregoup.anchorX = 0.5
 	scoregoup.anchorY = 0.5
@@ -277,13 +277,14 @@ function scene:create( event )
 
 
 				cells[r][c].scale = 1
-				cells[r][c].backgrid = display.newImageRect(foregroup, "assets/backgrounds/backgrid-"..((r+c)%2)..".png", 
+				cells[r][c].backgrid = display.newImageRect(foregroup, "assets/backgrounds/backgrid-"..((r+c)%2)..".png",
 					options.cells_size * options.scale.large, options.cells_size * options.scale.large)
 		
 				cells[r][c].backgrid.x = c*options.cells_size * options.scale.large
 		    	cells[r][c].backgrid.y = r*options.cells_size * options.scale.large 
 
-		    	if (cells[r][c].special ~= 0) then 
+		    	if (lvl.adventure == 1) then
+		    		if (cells[r][c].special ~= 0) then 
 			    	cells[r][c].special = display.newImageRect(foregroup, "assets/backgrounds/special_"..lvl.adventure..".png", 
 						options.cells_size * options.scale.large, options.cells_size * options.scale.large)
 			
@@ -292,10 +293,24 @@ function scene:create( event )
 		    	end
 
 		    	if (cells[r][c].value ~= 0) then display_monster(r, c, "placed") end
+		    	else
+		    		if (cells[r][c].value ~= 0) then display_monster(r, c, "placed") end
+			    	
+			    	if (cells[r][c].special ~= 0) then 
+				    	cells[r][c].special = display.newImageRect(foregroup, "assets/backgrounds/special_"..lvl.adventure..".png", 
+							options.cells_size * options.scale.large, options.cells_size * options.scale.large)
+				
+						cells[r][c].special.x = c*options.cells_size * options.scale.large
+				    	cells[r][c].special.y = r*options.cells_size * options.scale.large 
+			    	end
+		    	end
+
 		    	
+
+
 		    	if (cells[r][c].border ~= "") then 
 		    		cells[r][c].border_image = display.newImageRect(foregroup, 
-		    		"assets/backgrounds/stop_"..cells[r][c].border..".png", 
+		    		"assets/backgrounds/stop_"..cells[r][c].border.."_"..lvl.adventure..".png", 
 					options.cells_size * options.scale.large, options.cells_size * options.scale.large)
 		    		
 		    		cells[r][c].border_image.x = c*options.cells_size * options.scale.large

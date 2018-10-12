@@ -7,7 +7,7 @@ local foregroup = display.newGroup()
 
 
 lvl = {
-	adventure = 1,
+	adventure = 2,
 
 	goal = {[0]={
 		-- monster's index | buble
